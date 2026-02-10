@@ -1,0 +1,22 @@
+http:
+  routers:
+    auth-protected:
+      rule: "PathPrefix(`/`)"
+      service: auth-service
+      entryPoints:
+        - web
+      middlewares:
+        - auth-forward
+  
+  middlewares:
+    auth-forward:
+      forwardAuth:
+        address: "http://auth:5000/auth"
+        authResponseHeaders:
+          - "X-Pretest"
+  
+  services:
+    auth-service:
+      loadBalancer:
+        servers:
+          - url: "http://auth:5000"

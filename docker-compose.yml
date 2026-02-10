@@ -4,11 +4,13 @@ services:
       context: ./auth
     volumes:
       - ./auth/auth.py:/app/auth.py
-  nginx:
-    image: nginx:mainline
+  traefik:
+    image: traefik:v3.2
     volumes:
-      - ./nginx/default.conf:/etc/nginx/conf.d/default.conf
+      - ./traefik/traefik.yml:/etc/traefik/traefik.yml
+      - ./traefik/routes.yml:/etc/traefik/routes.yml
     ports:
       - "8080:80"
+      - "8081:8080"  # Traefik dashboard
     depends_on:
       - auth
